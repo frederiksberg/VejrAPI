@@ -64,11 +64,14 @@ def get_public_key(b64=True):
         BuildKey()
     
     with open("rsa.pub", "rb") as fp:
-        return fp.read()
+        data =  fp.read()
+    if b64:
+        return base64.b64encode(data)
+    else:
+        return data
     
 def encrypt(data):
-    '''Encrypts data using servers public key.
-    This is what a clients encryption method should look like.
+    '''Encrypts data using servers private key.
     
     Arguments:
         data {bytes} -- A bytestring of data
@@ -79,7 +82,11 @@ def encrypt(data):
 
     assert isinstance(data, bytes)
 
-    key_data = get_public_key(b64=False)
+    if not key_exists():
+        BuildKey()
+
+    with open("rsa", "rb") as fp:
+        key_data = fp.read()
     assert key_data
 
     rsa_key = RSA.importKey(key_data)
@@ -138,3 +145,37 @@ def decrypt(data):
         offset += chunk_size
 
     return decrypted.strip()
+
+def encrypt_with_key(data, key):
+    '''Like encrypt, but allows specification of a key.
+    
+    Arguments:
+        data {bytes} -- Data to be decrypted
+        key_file {string} -- Key file location. Can be either public or private.
+    
+    Returns:
+        bytes -- Decrypted data
+    '''
+    assert isinstance(data, bytes)
+
+    rsa_key = RSA.importKey(key)
+    rsa_key = PKCS1_OAEP.new(rsa_key)
+
+    chunk_size = 470 # (4096/8) - 42
+    offset = 0
+    end_loop = False
+    encrypted = b""
+
+    while not end_loop:
+        chunk = data[offset:offset + chunk_size]
+
+        if len(chunk) % chunk_size != 0:
+            # We are processing last chunk; end and pad
+            end_loop = True
+            chunk += b" " * (chunk_size - len(chunk))
+        
+        encrypted += rsa_key.encrypt(chunk)
+
+        offset += chunk_size
+    
+    return base64.b64encode(encrypted)
