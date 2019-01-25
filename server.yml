@@ -1,0 +1,10 @@
+version: '3'
+services:
+  api:
+    build:
+      context: .
+      dockerfile: server.Dockerfile
+    image: frbsc/vejr:server
+    ports:
+      - "12345:5000"
+    
