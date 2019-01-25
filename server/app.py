@@ -3,6 +3,7 @@ import json
 
 import RSA
 import srvlib
+from forecast import get_forecast
 
 app = Flask(__name__)
 
@@ -38,5 +39,24 @@ def insert():
         abort(404)
 
 @app.route("/getforecast", methods=["GET"])
-def get_forecast():
+def forecast_EP():
+    lat = request.args.get("lat")
+    lon = request.args.get("lon")
+    height = request.args.get("height")
+
+    if lat is None:
+        lat = 55.675806
+    if lon is None:
+        lon = 12.510884
+    if height is None:
+        height = 5
+
+    res = get_forecast(lat, lon, height)
+
+    if res is None:
+        abort(500)
+
+    res = json.dumps({"success": True, "result": res})
+
+    return res, 200, {"ContentType": "application/json"}
     

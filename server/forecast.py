@@ -1,5 +1,6 @@
 import requests
-import xml.etree.ElementTree as ET
+# import xml.etree.ElementTree as ET
+from lxml import etree as ET
 from datetime import datetime, timedelta
 from dateutil.parser import parse
 
@@ -42,12 +43,19 @@ def get_forecast(lat, lon, height):
             obs['fog'] = el[0].find('fog').get('percent')
             
             #Extract last hour of precipitation (Only data for next 48 hours)
-            for ele in root.findall('.//time'):
-                p_ts_from = parse(ele.get('from'))
-                p_ts_to = parse(ele.get('to'))
-                if p_ts_from == (ts_from - timedelta(hours=1)) and p_ts_to == ts_to:
-                    obs['precipitationPrevHour'] = ele[0].find('precipitation').get('value')
+            # for ele in root.findall('.//time'):
+            #     p_ts_from = parse(ele.get('from'))
+            #     p_ts_to = parse(ele.get('to'))
+            #     if p_ts_from == (ts_from - timedelta(hours=1)) and p_ts_to == ts_to:
+            #         obs['precipitationPrevHour'] = ele[0].find('precipitation').get('value')
 
+            fmo = (ts_from - timedelta(hours=1)).strftime("%Y-%m-%dT%H:%M:%SZ")
+            t = ts_to.strftime("%Y-%m-%dT%H:%M:%SZ")
+            
+            e = root.xpath(f".//time[@from='{fmo}' and @to='{t}']")
+            if len(e) > 0:
+                obs["precipitationPrevHour"] = e[0].find(".//precipitation").get("value")
+            
             forecasts.append(obs)
 
     return forecasts
