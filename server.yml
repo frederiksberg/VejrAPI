@@ -7,5 +7,5 @@ services:
       dockerfile: server.Dockerfile
     image: frbsc/vejr:server
     ports:
-      - "0.0.0.0:12345:5000"
+      - "4545:5000"
     
