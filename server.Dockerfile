@@ -3,8 +3,11 @@ FROM python:3.6.8-alpine3.8
 
 WORKDIR /usr/src
 
-RUN apk add --no-cache --virtual .build-deps musl-dev postgresql-dev libc-dev gcc libxslt-dev
-RUN apk add --no-cache postgresql-libs
+# Gets purged
+RUN apk add --no-cache --virtual .build-deps musl-dev postgresql-dev libc-dev gcc
+
+# Doesn't get purged
+RUN apk add --no-cache postgresql-libs libxslt-dev
 
 RUN pip install --upgrade pip
 
