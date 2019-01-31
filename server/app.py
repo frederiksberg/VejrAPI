@@ -64,7 +64,7 @@ def forecast_EP():
 
     red = get_redis()
     res = red.get(cache_key)
-    res = json.loads(res)
+    if res is not None: res = json.loads(res)
 
     if res is None:
         res = get_forecast(lat, lon, height)
