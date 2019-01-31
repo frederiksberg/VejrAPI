@@ -9,7 +9,7 @@ app = Flask(__name__)
 
 auth = srvlib.Auth()
 
-@app.route("/auth", methods=["GET", "POST"])
+#@app.route("/auth", methods=["GET", "POST"])
 def start_session():
     if request.method == "GET":
         return RSA.get_public_key()
@@ -20,7 +20,7 @@ def start_session():
             abort(403)
         return token
 
-@app.route("/insert", methods=["GET", "POST"])
+#@app.route("/insert", methods=["GET", "POST"])
 def insert():
     if request.method == "POST":
         q = request.form["q"]
