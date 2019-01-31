@@ -3,9 +3,8 @@ FROM python:3.6.8-alpine3.8
 
 WORKDIR /usr/src
 
-# RUN apk add build-base
-RUN apk add --update --no-cache libc-dev gcc libxslt-dev
-# RUN apk add libxml2-dev
+RUN apk add --no-cache --virtual .build-deps musl-dev postgresql-dev libc-dev gcc libxslt-dev
+RUN apk add --no-cache postgresql-libs
 
 RUN pip install --upgrade pip
 
@@ -17,6 +16,8 @@ RUN pip install --no-cache-dir psycopg2
 RUN pip install --no-cache-dir requests
 RUN pip install --no-cache-dir python-dateutil
 RUN pip install --no-cache-dir redis
+
+RUN apk --purge del .build-deps
 
 COPY ./server /usr/src
 
