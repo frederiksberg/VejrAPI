@@ -4,6 +4,7 @@ FROM python:3.6.8-alpine3.8
 WORKDIR /usr/src
 
 RUN apk add build-base
+RUN apk add libxml2
 
 RUN pip install --upgrade pip
 
