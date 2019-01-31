@@ -1,6 +1,8 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, g
 import json
+from redis import Redis
 
+from datetime import datetime
 import RSA
 import srvlib
 from forecast import get_forecast
@@ -8,6 +10,11 @@ from forecast import get_forecast
 app = Flask(__name__)
 
 auth = srvlib.Auth()
+
+def get_redis():
+    if not hasattr(g, 'redis'):
+        g.redis = Redis(host="redis", db=0, socket_timeout=5)
+    return g.redis
 
 #@app.route("/auth", methods=["GET", "POST"])
 def start_session():
@@ -51,10 +58,17 @@ def forecast_EP():
     if height is None:
         height = 5
 
-    res = get_forecast(lat, lon, height)
+    curr_hour = datetime.now().strftime("%Y-%m-%d-%H")
+
+    cache_key = "{}-{}-{}-{}".format(lat, lon, height, curr_hour)
+
+    red = get_redis()
+    res = red.get(cache_key)
 
     if res is None:
-        abort(500)
+        res = get_forecast(lat, lon, height)
+        if res is None: abort(500)
+        red.set(cache_key, res)
 
     res = json.dumps({"success": True, "result": res})
 

@@ -1,6 +1,6 @@
 __pycache__/
-.vscode/
+.vscode/*
 
-rsa
-rsa.pub
+*/rsa
+*/rsa.pub
 *.*~

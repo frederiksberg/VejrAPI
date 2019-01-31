@@ -11,6 +11,7 @@ RUN pip install --no-cache-dir pycrypto
 RUN pip install --no-cache-dir psycopg2
 RUN pip install --no-cache-dir requests
 RUN pip install --no-cache-dir python-dateutil
+RUN pip install --no-cache-dir redis
 
 COPY ./server /usr/src
 

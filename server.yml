@@ -8,4 +8,10 @@ services:
     image: frbsc/vejr:server
     ports:
       - "4455:5000"
+    depens_on:
+      - redis
     
+  redis:
+    image: redis:alpine
+    container_name: vejr-redis
+    expose: ["6379"]
