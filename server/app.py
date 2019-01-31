@@ -64,11 +64,12 @@ def forecast_EP():
 
     red = get_redis()
     res = red.get(cache_key)
+    res = json.loads(res)
 
     if res is None:
         res = get_forecast(lat, lon, height)
         if res is None: abort(500)
-        red.set(cache_key, res)
+        red.set(cache_key, json.dumps(res))
 
     res = json.dumps({"success": True, "result": res})
 
