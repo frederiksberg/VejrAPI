@@ -1,4 +1,5 @@
-from python:3.6.8
+#from python:3.6.8
+FROM python:3.6.8-alpine3.8
 
 WORKDIR /usr/src
 
@@ -16,11 +17,5 @@ RUN pip install --no-cache-dir redis
 COPY ./server /usr/src
 
 RUN python -c 'import RSA; RSA.BuildKey()'
-
-#ENV FLASK_RUN app.py
-
-# CMD ["pip", "list"]
-#CMD ["flask", "run"]
-#CMD "ls"
 
 CMD ["gunicorn", "-w 4", "-b 0.0.0.0:5000", "app:app"]

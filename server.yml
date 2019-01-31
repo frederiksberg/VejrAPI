@@ -1,11 +1,11 @@
-# version: '3'
-version: '2' 
+version: '3'
 services:
   api:
     build:
       context: .
       dockerfile: server.Dockerfile
     image: frbsc/vejr:server
+    restart: unless-stopped
     ports:
       - "4455:5000"
     depends_on:
@@ -14,4 +14,5 @@ services:
   redis:
     image: redis:alpine
     container_name: vejr-redis
+    restart: unless-stopped
     expose: ["6379"]
