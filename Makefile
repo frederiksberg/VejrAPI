@@ -1,13 +1,17 @@
 MAKEFLAGS += --silent
+.PHONY: deploy run build clean kill
 
 deploy: build
-	docker-compose -f ./server.yml up -d
+	docker-compose up -d
 
 run: build
-	docker-compose -f ./server.yml up
+	docker-compose up
 
 build: clean
-	docker build -t frbsc/vejr:server -f ./server.Dockerfile .
+	docker-compose build
 
-clean:
-	docker-compose -f ./server.yml rm -f
+clean: kill
+	docker-compose rm -f
+
+kill:
+	docker-compose down
