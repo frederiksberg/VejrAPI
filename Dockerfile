@@ -24,6 +24,4 @@ RUN apk --purge del .build-deps
 
 COPY ./server /usr/src
 
-RUN python -c 'import RSA; RSA.BuildKey()'
-
 CMD ["gunicorn", "-w 4", "-b 0.0.0.0:5000", "app:app"]
