@@ -8,13 +8,18 @@ services:
       - redis
     networks:
       - front-facing
+      - internal
     
   redis:
     image: redis:alpine
     container_name: vejr-redis
     restart: unless-stopped
+    networks:
+      - internal
 
 networks:
   front-facing:
     external: true
     name: proxy
+  internal:
+  
