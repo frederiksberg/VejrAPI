@@ -40,5 +40,5 @@ def forecast_EP():
 
     res = json.dumps({"success": True, "result": res})
 
-    return res, 200, {"ContentType": "application/json"}
+    return res, 200, {"Content-Type": "application/json"}
     
