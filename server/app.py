@@ -25,6 +25,13 @@ def forecast_EP():
     if height is None:
         height = 5
 
+    try:
+        lat = float(lat)
+        lon = float(lon)
+        height = int(height)
+    except:
+        abort(400)
+
     curr_hour = datetime.now().strftime("%Y-%m-%d-%H")
 
     cache_key = "{}-{}-{}-{}".format(lat, lon, height, curr_hour)
