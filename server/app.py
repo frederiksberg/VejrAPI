@@ -18,20 +18,19 @@ def forecast_EP():
     lon = request.args.get("lon")
     height = request.args.get("height")
 
-    try:
-        lat = float(lat)
-        lon = float(lon)
-        height = int(height)
-    except:
-        abort(400)
-
-
     if lat is None:
         lat = 55.675806
     if lon is None:
         lon = 12.510884
     if height is None:
         height = 5
+
+    try:
+        lat = float(lat)
+        lon = float(lon)
+        height = int(height)
+    except:
+        abort(400)
 
     curr_hour = datetime.now().strftime("%Y-%m-%d-%H")
 
